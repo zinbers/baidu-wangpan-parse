@@ -212,27 +212,30 @@ def main(options):
     if not folder:
         folder=False
     linkList=options.link.split(' ')
+    link=""
     isEncrypt = False
     password=None
-    if len(linkList) < 2:
-        return
-    if len(linkList) == 4:
+    if len(linkList) == 1:
+        link = linkList[0]
+    elif len(linkList) == 4:
         isEncrypt = True
         password = linkList[3]
+        link = linkList[1]
 
     baiduWangpan = BaiduWangpan(isEncrypt=isEncrypt,
                                 isFolder=options.folder,
-                                link=linkList[1],
+                                link=link,
                                 password=password)
     baiduWangpan.getDownloadURL()
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Get Baidu wangpan private sharing file download link.')
     parser.add_argument('-f', '--folder',
-                        help='Whether the sharing is a folder，input should be either "true" or "false"')
+                        help='Whether the sharing is a folder，input should be either "true" or "false"',
+                        type=str2bool, const=True, nargs='?')
     # parser.add_argument('-e', '--encrypt',
     #                    help='Whether sharing file is encrypted，input should be either "true" or "false"', 
-    #                    type=str2bool, const=True, nargs='?', required=True)
+                       # type=str2bool, const=True, nargs='?', required=True)
     parser.add_argument('-l', '--link',
                        help='Baidu wangpan sharing file link', required=True)
     # parser.add_argument('-p', '--password',
