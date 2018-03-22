@@ -15,6 +15,7 @@ import random
 import os
 import urllib
 import argparse
+from aria2c import Aria2c  
 
 import sys
 reload(sys)
@@ -168,6 +169,8 @@ class BaiduWangpan(object):
         return json.loads(resp.text)
 
     def getDownloadURL(self):
+        link=""
+        filename=None
         try:
             self.getBaiduCookie()  # 初始化cookie
 
@@ -182,22 +185,26 @@ class BaiduWangpan(object):
             while True:
                 if js['errno'] == 0:  # 获取下载链接成功
                     if not self.isFolder:
-                        print u'Filename：' + js['list'][0]['server_filename']
-                        print u'Download link：' + js["list"][0]['dlink']
-                        print u'Size：' + str(js['list'][0]['size']/1000000.0) + 'MB'
+                        # print u'Filename：' + js['list'][0]['server_filename']
+                        # print u'Download link：' + js["list"][0]['dlink']
+                        # print u'Size：' + str(js['list'][0]['size']/1000000.0) + 'MB'
+                        link=js["list"][0]['dlink']
+                        filename=js['list'][0]['server_filename']
                     else:
-                        print js['dlink']
+                        # print js['dlink']
+                        link=js['dlink']
                     break
                 elif js['errno'] == -20:  # 需要验证码
                     self.getVerifyCode()
                     js = self.downloadResp(needVerify=True)
                 else:
                     print u'Unknown error, the error code is as follows:'
-                    print js
-                    return
+                    # print js
+                    return None
         except Exception as e:
             print 'Exception:', e
             raise
+        return link,filename
 
 def str2bool(v):
     if v.lower() in ('true', 'yes', 't', 'y'):
@@ -226,7 +233,12 @@ def main(options):
                                 isFolder=options.folder,
                                 link=link,
                                 password=password)
-    baiduWangpan.getDownloadURL()
+    link,filename=baiduWangpan.getDownloadURL()
+    if link and len(link) > 0:
+        print('download link:{}'.format(link))
+        client = Aria2c('127.0.0.1', '6800')
+        # print(client.getVer())
+        client.addUri(link)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Get Baidu wangpan private sharing file download link.')
