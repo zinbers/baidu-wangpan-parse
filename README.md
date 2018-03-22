@@ -48,13 +48,13 @@ $ python baidu_wangpan_parse.py -l "链接: https://pan.baidu.com/s/1ySq6bu2fkzG
 
 3.获取没有加密的文件夹的打包下载地址
 ```sh
-$ python baidu_wangpan_parse.py -f true -l "https://pan.baidu.com/s/1gC0EobepvMXpq6Eaz0ywJw"
+$ python baidu_wangpan_parse.py -f true -l "https://pan.baidu.com/s/1XYqoRcbXl5b--zmX3yijEQ"
 
 ```
 
 4.获取加密的文件夹的打包下载地址
 ```sh
-$ python baidu_wangpan_parse.py -f true -l "链接: https://pan.baidu.com/s/1ySq6bu2fkzGVaEimoY9fhg 密码: 8sgb"
+$ python baidu_wangpan_parse.py -f true -l "链接: https://pan.baidu.com/s/1pMosAp_y_YKyfWlo1tHhag 密码: tkay"
 
 ```
 
