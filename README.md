@@ -1,6 +1,6 @@
 #原始github链接 https://github.com/tychxn/baidu-wangpan-parse
 
-# 百度网盘分享文件下载链接解析
+# 百度网盘分享文件下载链接解析，并自动发送链接给aria2cGUI程序
 
 ## 功能
 
