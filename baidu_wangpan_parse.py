@@ -82,7 +82,6 @@ class BaiduWangpan(object):
     def getParams(self):  # 重新载入页面来获取后面所需的参数
         resp = self.sess.get(self.link, headers=self.headers)
         resp.encoding = 'utf-8'
-
         # 读取页面中的参数
         m = re.search('\"sign\":\"(.+?)\"', resp.text)
         self.sign = m.group(1)
@@ -209,24 +208,35 @@ def str2bool(v):
         raise argparse.ArgumentTypeError('Unsupported value encountered.')
 
 def main(options):
-    baiduWangpan = BaiduWangpan(isEncrypt=options.encrypt,
+    folder=options.folder
+    if not folder:
+        folder=False
+    linkList=options.link.split(' ')
+    isEncrypt = False
+    password=None
+    if len(linkList) < 2:
+        return
+    if len(linkList) == 4:
+        isEncrypt = True
+        password = linkList[3]
+
+    baiduWangpan = BaiduWangpan(isEncrypt=isEncrypt,
                                 isFolder=options.folder,
-                                link=options.link,
-                                password=options.password)
+                                link=linkList[1],
+                                password=password)
     baiduWangpan.getDownloadURL()
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Get Baidu wangpan private sharing file download link.')
     parser.add_argument('-f', '--folder',
-                        help='Whether the sharing is a folder，input should be either "true" or "false"',
-                        type=str2bool, const=True, nargs='?', required=True)
-    parser.add_argument('-e', '--encrypt',
-                       help='Whether sharing file is encrypted，input should be either "true" or "false"', 
-                       type=str2bool, const=True, nargs='?', required=True)
+                        help='Whether the sharing is a folder，input should be either "true" or "false"')
+    # parser.add_argument('-e', '--encrypt',
+    #                    help='Whether sharing file is encrypted，input should be either "true" or "false"', 
+    #                    type=str2bool, const=True, nargs='?', required=True)
     parser.add_argument('-l', '--link',
                        help='Baidu wangpan sharing file link', required=True)
-    parser.add_argument('-p', '--password',
-                       help='Baidu wangpan sharing file password')
+    # parser.add_argument('-p', '--password',
+    #                    help='Baidu wangpan sharing file password')
     options = parser.parse_args()
 
     main(options)
