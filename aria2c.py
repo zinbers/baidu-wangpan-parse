@@ -54,11 +54,14 @@ class Aria2c:
             onFail = Aria2c._defaultErrorHandler
         payloads = self._genPayload(action, *params)
         resp = requests.post(self.serverUrl, data=json.dumps(payloads))
-        result = resp.json()
-        if "error" in result:
-            return onFail(result["error"]["code"], result["error"]["message"])
+        if resp.status_code == 200:
+            result = resp.json()
+            if "error" in result:
+                return onFail(result["error"]["code"], result["error"]["message"])
+            else:
+                return onSuc(resp)
         else:
-            return onSuc(resp)
+            print('Add to aria2gui client error!')
 
     def addUri(self, uri, options=None):
         def success(response):
